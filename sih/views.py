@@ -1,4 +1,4 @@
-from msilib.schema import Feature
+#from msilib.schema import Feature
 from pyexpat import features
 from django.shortcuts import render
 import mimetypes
