@@ -178,7 +178,7 @@ def classifile(request):
         X, Y = AutoFeatureSelection.FeatureSelection(df, target)  #
         # res=dataCleaner(df,features,target,DictionaryClass=None)
         X["target"]=Y
-        X.to_csv("sih/static/media/train.csv",index=False)
+        X.to_csv("sih/static/media/"+a.name+"_train.csv",index=False)
         print("final df Shape :", X.shape)
         log=AutoFeatureSelection.val("LoGS:")
         print(log)
@@ -207,7 +207,7 @@ def classifile(request):
         #response['Content-Disposition'] = "attachment; filename=train.csv"
         # Return the response value
         #return response
-        return redirect("/fileDownload?file1=/static/media/train.csv&file2=/static/media/"+a.name+"_log.txt")
+        return redirect("/fileDownload?file1=/static/media/"+a.name+"_train.csv&file2=/static/media/"+a.name+"_log.txt")
     else:
         # Load the template
         return render(request, 'index.html')
@@ -244,7 +244,7 @@ def bagOfWords(data, textField, target):
   df = pd.DataFrame(df_cv.toarray())
   df.columns=v.get_feature_names()
   df["Label"] = df.iloc[:, target]
-  df.to_csv("media/train.csv", index=False)
+  df.to_csv("sih/static/media/train_nlp.csv", index=False)
   path = os.getcwd()
   print(f"Result saved to {path}")
   dic = {
@@ -273,16 +273,12 @@ def nlpfile(request):
         dff = dataframe(path,nlpdelimitor)
         _, log = bagOfWords(dff,int(nlpfield),int(nlptarget))
 
-
-
-
-
         #X, Y = AutoFeatureSelection.FeatureSelection(df, target)  #
         # res=dataCleaner(df,features,target,DictionaryClass=None)
         #print("final df Shape :", X.shape)
 
         #print("Finale dataframe :", X.head())
-        with open("logs/"+ a.name +".txt", "w+") as f:
+        with open("sih/static/media/"+ a.name +"_log.txt", "w+") as f:
             f.write(str(log))
         
         
@@ -293,20 +289,20 @@ def nlpfile(request):
         print(a.name)
         print("Success")
 
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        #BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         # Define the full file path
-        filepath = BASE_DIR + '/media/' +'train.csv'
+        #filepath = BASE_DIR + '/media/' +'train.csv'
         # Open the file for reading content
-        path = open(filepath, 'rb')
+        #path = open(filepath, 'rb')
         # Set the mime type
-        mime_type, _ = mimetypes.guess_type(filepath)
+        #mime_type, _ = mimetypes.guess_type(filepath)
         # Set the return value of the HttpResponse
-        response = HttpResponse(path, content_type=mime_type)
+        #response = HttpResponse(path, content_type=mime_type)
         # Set the HTTP header for sending to browser
         #response['Content-Disposition'] = "attachment; filename=%s" % X.name
-        response['Content-Disposition'] = "attachment; filename=train.csv"
+        #response['Content-Disposition'] = "attachment; filename=train.csv"
         # Return the response value
-        return response
+        return redirect('/fileDownload?file1=/static/media/train_nlp.csv&file2=/static/media/'+a.name+'_log.txt')
     else:
         # Load the template
         return render(request, 'index.html')
@@ -345,7 +341,7 @@ def tsfile(request):
         print(str(log))
         with open('sih/static/media/'+a.name+'_log.txt', 'w+') as f:
             f.write(str(log))
-        dff.to_csv("sih/static/media/train.csv")
+        dff.to_csv("sih/static/media/train"+a.name+".csv")
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         # Define the full file path
         filepath = BASE_DIR + '/sih/static/media/' + 'train.csv'
@@ -359,7 +355,7 @@ def tsfile(request):
         #response['Content-Disposition'] = "attachment; filename=train.csv"
         # Return the response value
         #return response
-        return redirect('/fileDownload?file1=/static/media/train.csv&file2=/static/media/'+a.name+'_log.txt')
+        return redirect('/fileDownload?file1=/static/media/train'+a.name+'.csv&file2=/static/media/'+a.name+'_log.txt')
         
     else:
         # Load the template
@@ -480,7 +476,7 @@ def extract_features(audio):
 def extract(path, folder_name):
   with ZipFile(path, "r") as obj:
     obj.extractall(path.split(".")[0])
-  folder_name = "sih/static/upload/positives/"+folder_name+"/"
+  folder_name = "sih/static/upload/"+ folder_name +"/"+folder_name+"/"
   print(folder_name)
   extracted_features=[]
   for i in os.listdir(folder_name):

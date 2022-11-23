@@ -1,0 +1,1 @@
+{'Shape': (5573, 8712), 'Features': ('Vector count', 'Regular Expression', 'Tokenization', 'Stemming', 'Stop words removal'), 'Encoded column number': 1, 'Path': 'C:\\Users\\yuvra\\Downloads\\DATACHEF_CodeAssasins_31473\\SIH_Finale-master'}
