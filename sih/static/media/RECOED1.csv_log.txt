@@ -1,0 +1,1 @@
+{'Contant Features': Index(['bodypain', 'age', 'runnynose', 'diffBreath'], dtype='object')}
