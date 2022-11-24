@@ -149,9 +149,11 @@ def decompress(file):
         extract_dir="./"+os.path.basename(ogpath[0])
         if is_zipfile(file):
             with ZipFile(file,"r") as zip_ref:
-                members=zip_ref.namelist()
-                for file in members:
-                    zip_ref.extract(member=file,path=extract_dir)
+                # members=zip_ref.namelist()
+                # for file in members:
+                #     zip_ref.extract(member=file,path=extract_dir)
+                zip_ref.extractall(file.split(".")[0])
+
         elif is_tarfile(file):
             tar = tarfile.open(file, mode="r:gz")
             members=tar.getmembers()
@@ -159,7 +161,7 @@ def decompress(file):
                 tar.extract(member=member,path=extract_dir)
         print(f"file has been decompressed to folder {extract_dir}")
     except Exception as e:print(e)
-    return extract_dir
+    return extract_dir+"/" + file.split("\\")[-1].split(".")[0]
 
 def file_from_url(url):
     try:

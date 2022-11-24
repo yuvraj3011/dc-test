@@ -396,25 +396,60 @@ def trainImage(file=None, target=None,resize=50):
     else:
         raise ValueError("{file} can't be null or empty")
 
+def trainVid(file=None, target=None,resize=50):
+    #data read
+    l=[resize]
+    if file!=None:
+        root, ext = os.path.splitext(file)
+        print("File type : ",ext)
+        compress_list=[".zip",".tar",".gz",'.tar.gz','.bz2']
+        if not ext and ext not in compress_list and target==None:
+            print("hy first block is excuting")
+            if validate_url(file): 
+                file=file_from_url(file) 
+            data,target=check_subfolder_data(file)
+        elif ext in compress_list:
+            if validate_url(file): 
+                file=file_from_url(file) 
+            file=uncompress_file(file)
+            data,target=check_subfolder_data(file)
+        else:
+            data,target=check_subfolder_data(file)
+        data=AutoFeatureSelection.image_processing(data,target,resize)
+
+        return data,data.to_csv("media/pro_img.csv")
+    else:
+        raise ValueError("{file} can't be null or empty")
+
+
 
 def vidfile(request):
     if request.method=='POST':
         a=request.FILES['vid']
-        target=None
+        # target=None
         handle_uploaded_file(a)
-        path='C:\\Users\\yuvra\\Downloads\\DATACHEF_CodeAssasins_31473\\SIH_Finale-master\\sih\\static\\upload\\'+a.name
+        # path='C:\\Users\\yuvra\\Downloads\\DATACHEF_CodeAssasins_31473\\SIH_Finale-master\\media\\train.zip'
+
+        # print(path)
+
+        target=None
+        size=50
+        #file='C:\\Users\\yuvra\\Downloads\\DATACHEF_CodeAssasins_31473\\SIH_Finale-master\\image_demo.zip'
+        file='C:\\Users\\yuvra\\Downloads\\DATACHEF_CodeAssasins_31473\\SIH_Finale-master\\sih\\static\\upload\\'+a.name
+        data,target=trainVid(file,target,resize=50)
+        print(data)
+        data.to_csv("media/pro_img.csv")
 
         #path = 'sih/static/upload/'+a.name
 
         #data, target, log = img_train(path, target, resize=50)
-        data, target, log = trainImage(path, target, resize=50)
+        #data, target, log = trainImage(path, target, resize=50)
         #print(data)
-        data.to_csv("media/train.csv")
+        #data.to_csv("media/train_img.csv")
 
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         # Define the full file path
-        #filepath = BASE_DIR + '/media/' + a.name
-        filepath = BASE_DIR + '/' + path
+        filepath = BASE_DIR + '/media/pro_img.csv'
         # Open the file for reading content
         path = open(filepath, 'rb')
         # Set the mime type
@@ -422,9 +457,9 @@ def vidfile(request):
         # Set the return value of the HttpResponse
         response = HttpResponse(path, content_type=mime_type)
         # Set the HTTP header for sending to browser
-        response['Content-Disposition'] = "attachment; filename=%s" % a.name
+        response['Content-Disposition'] = "attachment; filename=pro_img.csv"
         # Return the response value
-        return response,log
+        return response
     else:
         # Load the template
         return render(request, 'index.html')
